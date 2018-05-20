@@ -3,7 +3,13 @@ template.innerHTML = `
     <div class="container">
         <h1>Access</h1>
         <form>
-            <input type="text" placeholder="Username" autocomplete="username" autofocus required>
+            <input type="text"
+                   placeholder="Username"
+                   autocomplete="username"
+                   pattern="^[a-zA-Z][a-zA-Z0-9-_]{0,17}$"
+                   title="Alpha numeric and dashes allowed. Between 1 and 18 chars."
+                   autofocus
+                   required>
             <button type="submit">Login</button>
         </form>
     </div>
