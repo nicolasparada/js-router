@@ -31,7 +31,8 @@ export default class Router {
         for (const route of this.dynamicRoutes) {
             const match = route.pattern.exec(pathname)
             if (match !== null) {
-                return route.handler(...match.slice(1))
+                const params = match.slice(1).map(decodeURIComponent)
+                return route.handler(...params)
             }
         }
     }
@@ -39,8 +40,8 @@ export default class Router {
     /**
      * @param {function} callback
      */
-    install(callback, getPathname = () => decodeURI(location.pathname)) {
-        callback(this.exec(getPathname()))
+    install(callback) {
+        callback(this.exec(location.pathname))
         this.callbacks.push(callback)
 
         if (this.installed) {
@@ -48,7 +49,7 @@ export default class Router {
         }
 
         const execCallbacks = () => {
-            const result = this.exec(getPathname())
+            const result = this.exec(location.pathname)
             for (const callback of this.callbacks) {
                 callback(result)
             }
