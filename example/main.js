@@ -1,4 +1,4 @@
-import Router from 'https://unpkg.com/@nicolasparada/router';
+import Router from 'https://unpkg.com/@nicolasparada/router@0.1.0/router.js';
 import { getAuthUser } from './auth.js';
 
 const main = document.querySelector('main')
