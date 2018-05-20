@@ -6,6 +6,7 @@ const modulesCache = new Map()
 const router = new Router()
 
 router.handle('/', guard(view('home')))
+router.handle('/about', view('about'))
 router.handle(/^\/users\/([^\/]+)$/, view('user'))
 router.handle(/^\//, view('not-found'))
 
