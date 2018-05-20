@@ -1,7 +1,7 @@
 const template = document.createElement('template')
 template.innerHTML = `
     <div class="container">
-        <h1>Login</h1>
+        <h1>Access</h1>
         <form>
             <input type="text" placeholder="Username" autocomplete="username" autofocus required>
             <button type="submit">Login</button>
