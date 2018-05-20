@@ -1,11 +1,10 @@
 import { getAuthUser } from './auth.js';
-import { escapeHTML } from './utils.js';
 
 const authUser = getAuthUser()
 
 if (authUser !== null) {
     document.querySelector('header').innerHTML += `
-        <a href="/users/${escapeHTML(authUser.username)}">Profile</a>
+        <a href="/users/${encodeURIComponent(authUser.username)}">Profile</a>
         <button onclick="logout()">Logout</button>
     `
 }
