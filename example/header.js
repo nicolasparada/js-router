@@ -1,19 +1,15 @@
 import { getAuthUser } from './auth.js';
 
-const profileLink = /** @type {HTMLAnchorElement} */ (document.getElementById('profile-link'))
-const logoutButton = /** @type {HTMLButtonElement} */ (document.getElementById('logout-button'))
-
 const authUser = getAuthUser()
 
 if (authUser !== null) {
-    profileLink.href = '/users/' + authUser.username
-    profileLink.hidden = false
-
-    logoutButton.onclick = logout
-    logoutButton.hidden = false
+    document.querySelector('header').innerHTML += `
+        <a href="/users/${authUser.username}">Profile</a>
+        <button onclick="logout()">Logout</button>
+    `
 }
 
-function logout() {
+window.logout = function logout() {
     localStorage.removeItem('auth_user')
     location.assign('/')
 }
