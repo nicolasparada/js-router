@@ -35,7 +35,7 @@ function render(result) {
 }
 ```
 
-Check for a more real-ish example at the `/example` dir.
+Check for a more real-ish example at the [`/example`](https://js-router.netlify.com/) dir.
 
 ### Handle
 
