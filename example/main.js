@@ -1,8 +1,8 @@
 import Router from 'https://unpkg.com/@nicolasparada/router@0.1.0/router.js';
 import { getAuthUser } from './auth.js';
+import { importWithCache } from './dynamic-import.js';
 
 const main = document.querySelector('main')
-const modulesCache = new Map()
 const router = new Router()
 
 router.handle('/', guard(view('home')))
@@ -19,15 +19,6 @@ router.install(async resultPromise => {
 function view(name) {
     return (...args) => importWithCache(`/pages/${name}-page.js`)
         .then(m => m.default(...args))
-}
-
-async function importWithCache(specifier) {
-    if (modulesCache.has(specifier)) {
-        return modulesCache.get(specifier)
-    }
-    const m = await import(specifier)
-    modulesCache.set(specifier, m)
-    return m
 }
 
 function guard(fn1, fn2 = view('welcome')) {
