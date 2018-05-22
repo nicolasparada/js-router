@@ -11,6 +11,13 @@
     <link rel="modulepreload" href="/dynamic-import.js">
     <script src="/header.js" type="module"></script>
     <script src="/main.js" type="module"></script>
+    <script>
+        addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+            }
+        })
+    </script>
 </head>
 <body>
     <header>
