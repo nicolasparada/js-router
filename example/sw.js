@@ -12,7 +12,6 @@ const staticUrlsToCache = [
     '/header.js',
     '/index.html',
     '/main.js',
-    '/router.js',
     '/styles.css',
     '/utils.js',
 ]
