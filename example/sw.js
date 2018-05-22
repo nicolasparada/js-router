@@ -37,8 +37,11 @@ self.addEventListener('activate', ev => {
 
 self.addEventListener('fetch', ev => {
     ev.respondWith(
-        caches.match(ev.request).then(res => res || ev.request.mode === 'navigate'
-            ? caches.match('/index.html').then(res => res || fetch(ev.request))
-            : fetch(ev.request))
+        caches.match(ev.request).then(res => res || fetch(ev.request).catch(err => {
+            if (ev.request.mode === 'navigate') {
+                return caches.match('/index.html')
+            }
+            throw err
+        }))
     )
 })
