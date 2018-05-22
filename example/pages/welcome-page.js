@@ -17,6 +17,9 @@ template.innerHTML = `
 export default function welcomePage() {
     const page = /** @type {DocumentFragment} */ (template.content.cloneNode(true))
     page.querySelector('form').addEventListener('submit', login)
+    setTimeout(input => {
+        input.focus()
+    }, 0, page.querySelector('input'))
     return page
 }
 
