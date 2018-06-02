@@ -1,4 +1,4 @@
-const VERSION = 3
+const VERSION = 4
 const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
     'https://unpkg.com/@nicolasparada/router@0.3.0/router.js',
