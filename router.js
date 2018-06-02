@@ -71,6 +71,7 @@ export default class Router {
                 return
 
             ev.preventDefault()
+            ev.stopPropagation()
             if (a.href === location.href)
                 return
 
