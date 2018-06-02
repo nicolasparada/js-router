@@ -61,19 +61,22 @@ export default class Router {
                 || ev.ctrlKey
                 || ev.shiftKey
                 || ev.altKey
-                || ev.metaKey)
+                || ev.metaKey) {
                 return
+            }
 
             const a = /** @type {Element} */ (ev.target).closest('a')
             if (a === null
                 || (a.target !== '' && a.target !== '_self')
-                || a.hostname !== location.hostname)
+                || a.hostname !== location.hostname) {
                 return
+            }
 
             ev.preventDefault()
             ev.stopPropagation()
-            if (a.href === location.href)
+            if (a.href === location.href) {
                 return
+            }
 
             history.pushState(history.state, document.title, a.href)
             execCallbacks()
