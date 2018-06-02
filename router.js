@@ -83,8 +83,22 @@ export default class Router {
         })
 
         addEventListener('popstate', execCallbacks)
+        addEventListener('pushstate', execCallbacks)
 
         this.installed = true
+    }
+
+    /**
+     * @param {string} to
+     * @param {boolean=} replace
+     */
+    static navigate(to, replace = false) {
+        if (replace) {
+            history.replaceState(history.state, document.title, to)
+        } else {
+            history.pushState(history.state, document.title, to)
+        }
+        dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
     }
 }
 

@@ -57,5 +57,13 @@ router.install(result => {
 })
 ```
 
-This callback is fired initially and for every link click or popstate event.
+This callback is fired initially and for every link click, pop and pushstate event.
 `result` is what the route handler returns.
+
+### Navigate
+
+```js
+Router.navigate('/foo')
+```
+
+This static method allows you to navigate imperatively. Under the hood, it uses a custom event "pushstate".
