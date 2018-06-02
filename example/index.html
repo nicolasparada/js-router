@@ -13,7 +13,8 @@
     <script src="/main.js" type="module"></script>
     <script>
         addEventListener('load', () => {
-            if ('serviceWorker' in navigator) {
+            const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname)
+            if ('serviceWorker' in navigator && !isLocalhost) {
                 navigator.serviceWorker.register('/sw.js')
             }
         })
@@ -21,8 +22,10 @@
 </head>
 <body>
     <header>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+        </nav>
     </header>
     <main></main>
 </body>

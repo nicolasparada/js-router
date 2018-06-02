@@ -1,7 +1,8 @@
-import Router from 'https://unpkg.com/@nicolasparada/router@0.2.0/router.js';
+import Router from 'https://unpkg.com/@nicolasparada/router@0.3.0/router.js';
 import { getAuthUser } from './auth.js';
 import { importWithCache } from './dynamic-import.js';
 
+const navigationEvent = new CustomEvent('navigation')
 const main = document.querySelector('main')
 const router = new Router()
 
@@ -11,7 +12,7 @@ router.handle(/^\/users\/([^\/]+)$/, view('user'))
 router.handle(/^\//, view('not-found'))
 
 router.install(async resultPromise => {
-    fixHeaderLinks()
+    dispatchEvent(navigationEvent)
     main.innerHTML = ''
     main.appendChild(await resultPromise)
 })
@@ -25,10 +26,4 @@ function guard(fn1, fn2 = view('welcome')) {
     return (...args) => getAuthUser() !== null
         ? fn1(...args)
         : fn2(...args)
-}
-
-function fixHeaderLinks() {
-    for (const a of /** @type {HTMLAnchorElement[]} */ (Array.from(document.querySelectorAll('header a')))) {
-        a.classList[a.href === location.href ? 'add' : 'remove']('active')
-    }
 }
