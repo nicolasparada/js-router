@@ -1,6 +1,6 @@
 # JavaScript Router
 
- - Lightweight (823 bytes).
+ - Lightweight (940 bytes).
  - Framework agnostic.
 
 The package is shipped like an ES module. Load it with `<script type=module>`.
