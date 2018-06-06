@@ -1,9 +1,9 @@
 # JavaScript Router
 
- - Lightweight (940 bytes).
+ - Lightweight (989 bytes).
  - Framework agnostic.
 
-The package is shipped like an ES module. Load it with `<script type=module>`.
+Shipped like an ES module. Load it with `<script type=module>`.
 
 ## Example
 
@@ -40,7 +40,7 @@ Check for a more real-ish example at the [`/example`](https://js-router.netlify.
 ### Handle
 
 ```js
-router.handle('/pathname', (...params) => {
+router.handle('/', (...params) => {
     // ...
 })
 ```
@@ -63,7 +63,7 @@ This callback is fired initially and for every link click, pop and pushstate eve
 ### Navigate
 
 ```js
-Router.navigate('/foo')
+Router.navigate('/')
 ```
 
 This static method allows you to navigate imperatively. Under the hood, it uses a custom event "pushstate".
