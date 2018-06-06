@@ -1,9 +1,28 @@
+const _exec = Symbol('_exec')
+
 export default class Router {
+    /**
+     * @param {string} to
+     * @param {boolean=} replace
+     */
+    static navigate(to, replace = false) {
+        if (replace) {
+            history.replaceState(history.state, document.title, to)
+        } else {
+            history.pushState(history.state, document.title, to)
+        }
+        dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
+    }
+
     constructor() {
         this.staticRoutes = /** @type {StaticRoute[]} */ ([])
         this.dynamicRoutes = /** @type {DynamicRoute[]} */ ([])
         this.callbacks = /** @type {function[]} */ ([])
         this.installed = false
+
+        this.handle = this.handle.bind(this)
+        this.install = this.install.bind(this)
+        this[_exec] = this[_exec].bind(this)
     }
 
     /**
@@ -20,28 +39,10 @@ export default class Router {
     }
 
     /**
-     * @param {string} pathname
-     */
-    exec(pathname) {
-        for (const route of this.staticRoutes) {
-            if (route.pattern === pathname) {
-                return route.handler()
-            }
-        }
-        for (const route of this.dynamicRoutes) {
-            const match = route.pattern.exec(pathname)
-            if (match !== null) {
-                const params = match.slice(1).map(decodeURIComponent)
-                return route.handler(...params)
-            }
-        }
-    }
-
-    /**
      * @param {function} callback
      */
     install(callback) {
-        callback(this.exec(location.pathname))
+        callback(this[_exec](location.pathname))
         this.callbacks.push(callback)
 
         if (this.installed) {
@@ -49,7 +50,7 @@ export default class Router {
         }
 
         const execCallbacks = () => {
-            const result = this.exec(location.pathname)
+            const result = this[_exec](location.pathname)
             for (const callback of this.callbacks) {
                 callback(result)
             }
@@ -73,13 +74,11 @@ export default class Router {
             }
 
             ev.preventDefault()
-            ev.stopPropagation()
             if (a.href === location.href) {
                 return
             }
 
-            history.pushState(history.state, document.title, a.href)
-            execCallbacks()
+            Router.navigate(a.href)
         })
 
         addEventListener('popstate', execCallbacks)
@@ -89,16 +88,21 @@ export default class Router {
     }
 
     /**
-     * @param {string} to
-     * @param {boolean=} replace
+     * @param {string} pathname
      */
-    static navigate(to, replace = false) {
-        if (replace) {
-            history.replaceState(history.state, document.title, to)
-        } else {
-            history.pushState(history.state, document.title, to)
+    [_exec](pathname) {
+        for (const route of this.staticRoutes) {
+            if (route.pattern === pathname) {
+                return route.handler()
+            }
         }
-        dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
+        for (const route of this.dynamicRoutes) {
+            const match = route.pattern.exec(pathname)
+            if (match !== null) {
+                const params = match.slice(1).map(decodeURIComponent)
+                return route.handler(...params)
+            }
+        }
     }
 }
 
