@@ -1,9 +1,0 @@
-{
-    "private": true,
-    "scripts": {
-        "start": "serve -s"
-    },
-    "dependencies": {
-        "serve": "^8.2.0"
-    }
-}
