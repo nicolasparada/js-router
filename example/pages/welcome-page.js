@@ -12,7 +12,7 @@ template.innerHTML = `
                    required>
             <button type="submit">Login</button>
         </form>
-        <p>Not a real login... Enter any name 🙂</p>
+        <p>Not a real login. Enter any name 🙂</p>
     </div>
 `
 export default function welcomePage() {

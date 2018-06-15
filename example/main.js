@@ -2,7 +2,7 @@ import Router from 'https://unpkg.com/@nicolasparada/router@0.5.0/router.js';
 import { getAuthUser } from './auth.js';
 import { importWithCache } from './dynamic-import.js';
 
-const navigationEvent = new CustomEvent('navigation')
+const routerNavigationEvent = new CustomEvent('routernavigation')
 const main = document.querySelector('main')
 const router = new Router()
 
@@ -12,7 +12,7 @@ router.handle(/^\/users\/([^\/]+)$/, view('user'))
 router.handle(/^\//, view('not-found'))
 
 router.install(async resultPromise => {
-    dispatchEvent(navigationEvent)
+    dispatchEvent(routerNavigationEvent)
     main.innerHTML = ''
     main.appendChild(await resultPromise)
 })

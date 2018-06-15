@@ -10,20 +10,22 @@ if (authUser !== null) {
     `
 }
 
-addEventListener('navigation', fixNavLinks)
+addEventListener('routernavigation', onRouterNavigation)
 
-window.logout = function logout() {
+function logout() {
     localStorage.removeItem('auth_user')
     location.assign('/')
 }
 
-function fixNavLinks() {
+function onRouterNavigation() {
     const links = Array.from(nav.querySelectorAll('a'))
     for (const link of links) {
-        if (link.href === location.href) {
+        if (link.pathname === location.pathname) {
             link.setAttribute('aria-current', 'page')
         } else {
             link.removeAttribute('aria-current')
         }
     }
 }
+
+window['logout'] = logout

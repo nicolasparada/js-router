@@ -12,12 +12,12 @@
     <script src="/header.js" type="module"></script>
     <script src="/main.js" type="module"></script>
     <script>
-        addEventListener('load', () => {
-            const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname)
-            if ('serviceWorker' in navigator && !isLocalhost) {
+        const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname)
+        if ('serviceWorker' in navigator && !isLocalhost) {
+            addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-            }
-        })
+            })
+        }
     </script>
 </head>
 <body>

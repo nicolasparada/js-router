@@ -1,4 +1,7 @@
+const modulesCache = new Map()
+
 Object.defineProperty(window, Symbol.for('registry'), { value: new Map() })
+
 export default function dynamicImport(src) {
     const registry = window[Symbol.for('registry')]
     if (registry.has(src))
@@ -27,7 +30,6 @@ export default function dynamicImport(src) {
     return record.promise
 }
 
-const modulesCache = new Map()
 export async function importWithCache(specifier) {
     if (modulesCache.has(specifier))
         return modulesCache.get(specifier)
