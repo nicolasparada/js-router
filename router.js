@@ -1,19 +1,28 @@
+/**
+ * @typedef {function(): any} StaticHandler
+ */
+
+/**
+ * @typedef {function(...string): any} DynamicHandler
+ */
+
+/**
+ * @typedef StaticRoute
+ * @property {string} pattern
+ * @property {StaticHandler} handler
+ */
+
+/**
+ * @typedef DynamicRoute
+ * @property {RegExp} pattern
+ * @property {DynamicHandler} handler
+ */
+
+
 const _exec = Symbol('_exec')
+let hijacked = false
 
-export default class Router {
-    /**
-     * @param {string} to
-     * @param {boolean=} replace
-     */
-    static navigate(to, replace = false) {
-        if (replace) {
-            history.replaceState(history.state, document.title, to)
-        } else {
-            history.pushState(history.state, document.title, to)
-        }
-        dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
-    }
-
+export class Router {
     constructor() {
         this.staticRoutes = /** @type {StaticRoute[]} */ ([])
         this.dynamicRoutes = /** @type {DynamicRoute[]} */ ([])
@@ -21,7 +30,6 @@ export default class Router {
         this.installed = false
 
         this.handle = this.handle.bind(this)
-        this.install = this.install.bind(this)
         this[_exec] = this[_exec].bind(this)
     }
 
@@ -39,11 +47,13 @@ export default class Router {
     }
 
     /**
-     * @param {function} callback
+     * @param {function=} callback
      */
     install(callback) {
-        callback(this[_exec](location.pathname))
-        this.callbacks.push(callback)
+        if (typeof callback === 'function') {
+            callback(this[_exec](location.pathname))
+            this.callbacks.push(callback)
+        }
 
         if (this.installed) {
             return
@@ -56,33 +66,9 @@ export default class Router {
             }
         }
 
-        document.body.addEventListener('click', ev => {
-            if (ev.defaultPrevented
-                || ev.button !== 0
-                || ev.ctrlKey
-                || ev.shiftKey
-                || ev.altKey
-                || ev.metaKey) {
-                return
-            }
-
-            const a = /** @type {Element} */ (ev.target).closest('a')
-            if (a === null
-                || (a.target !== '' && a.target !== '_self')
-                || a.hostname !== location.hostname) {
-                return
-            }
-
-            ev.preventDefault()
-            if (a.href === location.href) {
-                return
-            }
-
-            Router.navigate(a.href)
-        })
-
         addEventListener('popstate', execCallbacks)
         addEventListener('pushstate', execCallbacks)
+        hijackClicks()
 
         this.installed = true
     }
@@ -106,22 +92,50 @@ export default class Router {
     }
 }
 
-/**
- * @typedef StaticRoute
- * @property {string} pattern
- * @property {StaticHandler} handler
- */
+export default Router
+
+function hijackClicks() {
+    if (hijacked) {
+        return
+    }
+
+    document.body.addEventListener('click', ev => {
+        if (ev.defaultPrevented
+            || ev.button !== 0
+            || ev.ctrlKey
+            || ev.shiftKey
+            || ev.altKey
+            || ev.metaKey) {
+            return
+        }
+
+        const a = /** @type {Element} */ (ev.target).closest('a')
+        if (a === null
+            || (a.target !== '' && a.target !== '_self')
+            || a.hostname !== location.hostname) {
+            return
+        }
+
+        ev.preventDefault()
+        if (a.href === location.href) {
+            return
+        }
+
+        navigate(a.href)
+    })
+
+    hijacked = true
+}
 
 /**
- * @typedef DynamicRoute
- * @property {RegExp} pattern
- * @property {DynamicHandler} handler
+ * @param {string} to
+ * @param {boolean=} replace
  */
-
-/**
- * @typedef {function(): any} StaticHandler
- */
-
-/**
- * @typedef {function(...string): any} DynamicHandler
- */
+export function navigate(to, replace = false) {
+    if (replace) {
+        history.replaceState(history.state, document.title, to)
+    } else {
+        history.pushState(history.state, document.title, to)
+    }
+    dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
+}
