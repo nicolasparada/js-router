@@ -1,7 +1,7 @@
 const VERSION = 3
 const staticCacheName = `static-v${VERSION}`
 const staticUrlsToCache = [
-    'https://unpkg.com/@nicolasparada/router@0.5.0/router.js',
+    'https://unpkg.com/@nicolasparada/router@0.6.0/router.js',
     '/pages/about-page.js',
     '/pages/home-page.js',
     '/pages/not-found-page.js',
