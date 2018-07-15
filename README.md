@@ -1,6 +1,6 @@
 # JavaScript Router
 
- - Lightweight (989 bytes).
+ - Lightweight (1.02 kB).
  - Framework agnostic.
 
 Shipped like an ES module. Load it with `<script type=module>`.
@@ -63,7 +63,8 @@ This callback is fired initially and for every link click, pop and pushstate eve
 ### Navigate
 
 ```js
-Router.navigate('/')
+import { navigate } from 'https://unpkg.com/@nicolasparada/router'
+navigate('/')
 ```
 
-This static method allows you to navigate imperatively. Under the hood, it uses a custom event "pushstate".
+This function allows you to navigate imperatively. Under the hood, it uses a custom event "pushstate".
