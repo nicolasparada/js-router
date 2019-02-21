@@ -5,6 +5,8 @@
 
 Shipped like an ES module. Load it with `<script type=module>`.
 
+[Demo](https://js-router.netlify.com/)
+
 ## Example
 
 ```js
@@ -36,7 +38,7 @@ function render(result) {
 }
 ```
 
-Check for a more real-ish example at the [`/example`](https://js-router.netlify.com/) dir.
+Check for a more real-ish example at the [`/example`](https://github.com/nicolasparada/js-router/tree/master/example) dir.
 
 ### Route
 
@@ -74,7 +76,7 @@ It makes the router start listening for navigation events (`popstate` and whatso
 ### Navigate
 
 ```js
-import { navigate } from 'https://unpkg.com/@nicolasparada/router'
+import { navigate } from 'https://unpkg.com/@nicolasparada/router@0.7.0/router.js'
 
 navigate('/')
 ```
