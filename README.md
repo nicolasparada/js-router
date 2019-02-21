@@ -8,7 +8,7 @@ Shipped like an ES module. Load it with `<script type=module>`.
 ## Example
 
 ```js
-import { createRouter } from 'https://unpkg.com/@nicolasparada/router'
+import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.0/router.js'
 
 const main = document.querySelector('main')
 const router = createRouter()
@@ -79,4 +79,4 @@ import { navigate } from 'https://unpkg.com/@nicolasparada/router'
 navigate('/')
 ```
 
-This function allows you to navigate imperatively.
+This function allows you to navigate imperatively. It accepts a second boolean argument to navigate without leaving history behind (`history.replaceState`).
