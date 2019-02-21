@@ -71,7 +71,7 @@ The listener you pass is fired initially and for every navigation.
 router.install()
 ```
 
-It makes the router start listening for navigation events (`popstate` and whatsoever). It also hijacks all the anchor links to do pushstates instead of full page reloads.
+It makes the router start listening for navigation events (`popstate` and whatsoever). It also hijacks all the anchor links to prevent full page reloads.
 
 ### Navigate
 
