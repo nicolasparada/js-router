@@ -15,7 +15,7 @@ template.innerHTML = `
         <p>Not a real login. Enter any name 🙂</p>
     </div>
 `
-export default function welcomePage() {
+export default function accessPage() {
     const page = /** @type {DocumentFragment} */ (template.content.cloneNode(true))
     page.querySelector('form').addEventListener('submit', login)
     setTimeout(input => {
@@ -24,11 +24,14 @@ export default function welcomePage() {
     return page
 }
 
+/**
+ * @param {Event} ev
+ */
 function login(ev) {
     ev.preventDefault()
-    const form = ev.currentTarget
+    const form = /** @type {HTMLFormElement} */ (ev.currentTarget)
     const input = form.querySelector('input')
-    const user = { username: input.value }
-    localStorage.setItem('auth_user', JSON.stringify(user))
+    const authUser = { username: input.value }
+    localStorage.setItem('auth_user', JSON.stringify(authUser))
     location.replace('/')
 }

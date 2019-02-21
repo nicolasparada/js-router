@@ -1,6 +1,6 @@
 # JavaScript Router
 
- - Lightweight (1.02 kB).
+ - Lightweight (1.06 kB).
  - Framework agnostic.
 
 Shipped like an ES module. Load it with `<script type=module>`.
@@ -8,22 +8,23 @@ Shipped like an ES module. Load it with `<script type=module>`.
 ## Example
 
 ```js
-import Router from 'https://unpkg.com/@nicolasparada/router'
+import { createRouter } from 'https://unpkg.com/@nicolasparada/router'
 
 const main = document.querySelector('main')
-const router = new Router()
+const router = createRouter()
 
-router.handle('/', homePage)
-router.handle(/^\/users\/([^\/]+)$/, userPage)
-router.handle(/^\//, notFound)
-router.install(render)
+router.route('/', homePage)
+router.route(/^\/users\/(?<username>[^\/]+)$/, userPage)
+router.route(/^\//, notFound)
+router.subscribe(render)
+router.install()
 
 function homePage() {
     return 'Home Page'
 }
 
-function userPage(username) {
-    return `${username}'s Profile Page`
+function userPage(params) {
+    return `${params.username}'s Profile Page`
 }
 
 function notFoundPage() {
@@ -37,28 +38,38 @@ function render(result) {
 
 Check for a more real-ish example at the [`/example`](https://js-router.netlify.com/) dir.
 
-### Handle
+### Route
 
 ```js
-router.handle('/', (...params) => {
+router.route('/', params => {
     // ...
 })
 ```
 
-`handle` takes a pattern and a handler function.
-The pattern can be a `string` for exact match or a regular expression for dynamic URLs. `params` are the captured parts if a regular expression was used.
+`route` takes a pattern and a handler function.
+
+The pattern can be a `string` for exact match or a regular expression for dynamic URLs. `params` is actually an array with the captured parts if a regular expression was used. But if you used named capture groups, you can access them through the names you provided.
+
 Be careful with the order in which you add the routes.
+
+### Subscribe
+
+```js
+router.subscribe(result => {
+    // ...
+})
+```
+
+The listener you pass is fired initially and for every navigation.
+`result` is what the route handler returns.
 
 ### Install
 
 ```js
-router.install(result => {
-    // ...
-})
+router.install()
 ```
 
-This callback is fired initially and for every link click, pop and pushstate event.
-`result` is what the route handler returns.
+It makes the router start listening for navigation events (`popstate` and whatsoever). It also hijacks all the anchor links to do pushstates instead of full page reloads.
 
 ### Navigate
 
@@ -67,4 +78,4 @@ import { navigate } from 'https://unpkg.com/@nicolasparada/router'
 navigate('/')
 ```
 
-This function allows you to navigate imperatively. Under the hood, it uses a custom event "pushstate".
+This function allows you to navigate imperatively.

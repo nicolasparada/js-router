@@ -1,10 +1,9 @@
-const template = document.createElement('template')
-template.innerHTML = `
-    <div class="container">
-        <h1>404 Not Found</h1>
-    </div>
+const page = document.createElement('div')
+page.className = 'container'
+page.innerHTML = `
+    <h1>404 Not Found</h1>
 `
 
 export default function notFoundPage() {
-    return template.content.cloneNode(true)
+    return page
 }

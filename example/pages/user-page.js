@@ -1,11 +1,10 @@
 import { escapeHTML } from '../utils.js';
 
-export default function userPage(username) {
-    const template = document.createElement('template')
-    template.innerHTML = `
-        <div class="container">
-            <h1>${escapeHTML(username)}'s Profile Page</h1>
-        </div>
+export default function userPage({ username }) {
+    const page = document.createElement('div')
+    page.className = 'container'
+    page.innerHTML = `
+        <h1>${escapeHTML(username)}'s Profile Page</h1>
     `
-    return template.content
+    return page
 }

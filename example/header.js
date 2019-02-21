@@ -1,4 +1,5 @@
 import { getAuthUser } from './auth.js';
+import { router } from './main.js'
 
 const authUser = getAuthUser()
 const nav = document.querySelector('header nav')
@@ -6,18 +7,12 @@ const nav = document.querySelector('header nav')
 if (authUser !== null) {
     nav.innerHTML += `
         <a href="/users/${encodeURIComponent(authUser.username)}">Profile</a>
-        <button onclick="logout()">Logout</button>
+        <button id="logout-button">Logout</button>
     `
+    nav.querySelector('#logout-button').addEventListener('click', logout)
 }
 
-addEventListener('routernavigation', onRouterNavigation)
-
-function logout() {
-    localStorage.removeItem('auth_user')
-    location.assign('/')
-}
-
-function onRouterNavigation() {
+router.subscribe(() => {
     const links = Array.from(nav.querySelectorAll('a'))
     for (const link of links) {
         if (link.pathname === location.pathname) {
@@ -26,6 +21,11 @@ function onRouterNavigation() {
             link.removeAttribute('aria-current')
         }
     }
+})
+
+function logout() {
+    localStorage.removeItem('auth_user')
+    location.assign('/')
 }
 
 window['logout'] = logout

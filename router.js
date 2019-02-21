@@ -1,141 +1,146 @@
-/**
- * @typedef {function(): any} StaticHandler
- */
+let clicksHijacked = false
 
-/**
- * @typedef {function(...string): any} DynamicHandler
- */
-
-/**
- * @typedef StaticRoute
- * @property {string} pattern
- * @property {StaticHandler} handler
- */
-
-/**
- * @typedef DynamicRoute
- * @property {RegExp} pattern
- * @property {DynamicHandler} handler
- */
-
-
-const _exec = Symbol('_exec')
-let hijacked = false
-
-export class Router {
-    constructor() {
-        this.staticRoutes = /** @type {StaticRoute[]} */ ([])
-        this.dynamicRoutes = /** @type {DynamicRoute[]} */ ([])
-        this.callbacks = /** @type {function[]} */ ([])
-        this.installed = false
-
-        this.handle = this.handle.bind(this)
-        this[_exec] = this[_exec].bind(this)
-    }
+export function createRouter() {
+    const routes = /** @type {Set<{ pattern: string|RegExp, fn: function }>} */ (new Set())
+    const listeners = /** @type {Set<function>} */ (new Set())
+    let installed = false
 
     /**
      * @param {string|RegExp} pattern
-     * @param {StaticHandler|DynamicHandler} handler
+     * @param {function} fn
      */
-    handle(pattern, handler) {
-        if (typeof pattern === 'string') {
-            // @ts-ignore
-            this.staticRoutes.push({ pattern, handler })
-        } else if (pattern instanceof RegExp) {
-            this.dynamicRoutes.push({ pattern, handler })
-        }
+    const route = (pattern, fn) => {
+        routes.add({ pattern, fn })
     }
 
     /**
-     * @param {function=} callback
+     * @param {function} listener
      */
-    install(callback) {
-        if (typeof callback === 'function') {
-            callback(this[_exec](location.pathname))
-            this.callbacks.push(callback)
+    const subscribe = listener => {
+        listeners.add(listener)
+        return () => {
+            listeners.delete(listener)
         }
-
-        if (this.installed) {
-            return
-        }
-
-        const execCallbacks = () => {
-            const result = this[_exec](location.pathname)
-            for (const callback of this.callbacks) {
-                callback(result)
-            }
-        }
-
-        addEventListener('popstate', execCallbacks)
-        addEventListener('pushstate', execCallbacks)
-        hijackClicks()
-
-        this.installed = true
     }
 
-    /**
-     * @param {string} pathname
-     */
-    [_exec](pathname) {
-        for (const route of this.staticRoutes) {
-            if (route.pattern === pathname) {
-                return route.handler()
+    const onNavigation = () => {
+        const pathname = location.pathname
+        let result
+        for (const route of routes) {
+            if (typeof route.pattern === 'string') {
+                if (route.pattern !== pathname) {
+                    continue
+                }
+
+                result = route.fn()
+                break
             }
+
+            const params = collectParams(route.pattern, pathname)
+            if (params === null) {
+                continue
+            }
+
+            result = route.fn(params)
+            break
         }
-        for (const route of this.dynamicRoutes) {
-            const match = route.pattern.exec(pathname)
-            if (match !== null) {
-                const params = match.slice(1).map(decodeURIComponent)
-                return route.handler(...params)
+
+        for (const listener of listeners) {
+            listener(result)
+        }
+    }
+
+    const install = () => {
+        if (!installed) {
+            addEventListener('popstate', onNavigation)
+            addEventListener('pushstate', onNavigation)
+            addEventListener('replacestate', onNavigation)
+            addEventListener('hashchange', onNavigation)
+            setTimeout(onNavigation, 0)
+            installed = true
+        }
+
+        if (!clicksHijacked) {
+            document.addEventListener('click', hijackClicks)
+            clicksHijacked = true
+        }
+
+        return () => {
+            if (installed) {
+                removeEventListener('popstate', onNavigation)
+                removeEventListener('pushstate', onNavigation)
+                removeEventListener('replacestate', onNavigation)
+                removeEventListener('hashchange', onNavigation)
+                installed = false
+            }
+
+            if (clicksHijacked) {
+                document.removeEventListener('click', hijackClicks)
+                clicksHijacked = false
             }
         }
     }
+
+    return { route, subscribe, install }
 }
 
-export default Router
-
-function hijackClicks() {
-    if (hijacked) {
+export function navigate(to = location.pathname, replace = false) {
+    const state = history.state
+    const title = document.title
+    if (replace) {
+        history.replaceState(state, title, to)
+        dispatchEvent(new PopStateEvent('replacestate', { state }))
         return
     }
 
-    document.body.addEventListener('click', ev => {
-        if (ev.defaultPrevented
-            || ev.button !== 0
-            || ev.ctrlKey
-            || ev.shiftKey
-            || ev.altKey
-            || ev.metaKey) {
-            return
-        }
-
-        const a = /** @type {Element} */ (ev.target).closest('a')
-        if (a === null
-            || (a.target !== '' && a.target !== '_self')
-            || a.hostname !== location.hostname) {
-            return
-        }
-
-        ev.preventDefault()
-        if (a.href === location.href) {
-            return
-        }
-
-        navigate(a.href)
-    })
-
-    hijacked = true
+    history.pushState(state, title, to)
+    dispatchEvent(new PopStateEvent('pushstate', { state }))
 }
 
 /**
- * @param {string} to
- * @param {boolean=} replace
+ * @param {MouseEvent} ev
  */
-export function navigate(to, replace = false) {
-    if (replace) {
-        history.replaceState(history.state, document.title, to)
-    } else {
-        history.pushState(history.state, document.title, to)
+function hijackClicks(ev) {
+    if (ev.defaultPrevented
+        || ev.button !== 0
+        || ev.ctrlKey
+        || ev.shiftKey
+        || ev.altKey
+        || ev.metaKey) {
+        return
     }
-    dispatchEvent(new PopStateEvent('pushstate', { state: history.state }))
+
+    const a = /** @type {Element} */ (ev.target).closest('a')
+    if (a === null
+        || (a.target !== '' && a.target !== '_self')
+        || a.hostname !== location.hostname) {
+        return
+    }
+
+    ev.preventDefault()
+    if (a.href === location.href) {
+        return
+    }
+
+    navigate(a.href)
+}
+
+/**
+ * @param {RegExp} pattern
+ * @param {string} pathname
+ */
+function collectParams(pattern, pathname) {
+    const match = pattern.exec(pathname)
+    if (match === null) {
+        return null
+    }
+
+    const params = match.slice(1).map(decodeURIComponent)
+    if (typeof match.groups === 'object' && match.groups !== null) {
+        for (const [k, v] of Object.entries(match.groups)) {
+            params[k] = decodeURIComponent(v)
+        }
+    }
+
+    return params
 }
