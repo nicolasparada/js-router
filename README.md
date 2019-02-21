@@ -75,6 +75,7 @@ It makes the router start listening for navigation events (`popstate` and whatso
 
 ```js
 import { navigate } from 'https://unpkg.com/@nicolasparada/router'
+
 navigate('/')
 ```
 
