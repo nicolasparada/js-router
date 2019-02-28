@@ -8,7 +8,7 @@ const r = createRouter()
 
 r.route('/', guard(view('home-page'), view('access-page')))
 r.route('/about', view('about-page'))
-r.route(/^\/users\/(?<username>[^\/]+)$/, view('user-page'))
+r.route(/^\/users\/(?<username>[^/]+)$/, view('user-page'))
 r.route(/^\//, view('not-found-page'))
 r.subscribe(async result => {
     await render(result, main)
