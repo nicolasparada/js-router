@@ -1,6 +1,6 @@
 # JavaScript Router
 
- - Lightweight (1.06 kB).
+ - Lightweight (1.11 kB).
  - Framework agnostic.
 
 Shipped like an ES module. Load it with `<script type=module>`.
@@ -10,13 +10,13 @@ Shipped like an ES module. Load it with `<script type=module>`.
 ## Example
 
 ```js
-import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.0/router.js'
+import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.1/router.js'
 
 const main = document.querySelector('main')
 const router = createRouter()
 
 router.route('/', homePage)
-router.route(/^\/users\/(?<username>[^\/]+)$/, userPage)
+router.route(/^\/users\/(?<username>[^/]+)$/, userPage)
 router.route(/^\//, notFound)
 router.subscribe(render)
 router.install()
@@ -76,7 +76,7 @@ It makes the router start listening for navigation events (`popstate` and whatso
 ### Navigate
 
 ```js
-import { navigate } from 'https://unpkg.com/@nicolasparada/router@0.7.0/router.js'
+import { navigate } from 'https://unpkg.com/@nicolasparada/router@0.7.1/router.js'
 
 navigate('/')
 ```
