@@ -1,4 +1,5 @@
 let clicksHijacked = false
+let routersCount = 0
 
 export function createRouter() {
     const routes = /** @type {Set<{ pattern: string|RegExp, fn: function }>} */ (new Set())
@@ -58,6 +59,7 @@ export function createRouter() {
             addEventListener('hashchange', onNavigation)
             setTimeout(onNavigation, 0)
             installed = true
+            routersCount++
         }
 
         if (!clicksHijacked) {
@@ -72,9 +74,13 @@ export function createRouter() {
                 removeEventListener('replacestate', onNavigation)
                 removeEventListener('hashchange', onNavigation)
                 installed = false
+                routersCount--
+                if (routersCount < 0) {
+                    routersCount = 0
+                }
             }
 
-            if (clicksHijacked) {
+            if (clicksHijacked && routersCount === 0) {
                 document.removeEventListener('click', hijackClicks)
                 clicksHijacked = false
             }
