@@ -37,9 +37,16 @@ export function createRouter() {
                 break
             }
 
-            const params = collectParams(route.pattern, pathname)
-            if (params === null) {
+            const match = route.pattern.exec(pathname)
+            if (match === null) {
                 continue
+            }
+
+            const params = match.slice(1).map(decodeURIComponent)
+            if (typeof match.groups === 'object' && match.groups !== null) {
+                for (const [k, v] of Object.entries(match.groups)) {
+                    params[k] = decodeURIComponent(v)
+                }
             }
 
             result = route.fn(params)
@@ -129,24 +136,4 @@ function hijackClicks(ev) {
     }
 
     navigate(a.href)
-}
-
-/**
- * @param {RegExp} pattern
- * @param {string} pathname
- */
-function collectParams(pattern, pathname) {
-    const match = pattern.exec(pathname)
-    if (match === null) {
-        return null
-    }
-
-    const params = match.slice(1).map(decodeURIComponent)
-    if (typeof match.groups === 'object' && match.groups !== null) {
-        for (const [k, v] of Object.entries(match.groups)) {
-            params[k] = decodeURIComponent(v)
-        }
-    }
-
-    return params
 }
