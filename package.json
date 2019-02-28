@@ -1,6 +1,6 @@
 {
   "name": "@nicolasparada/router",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "router",
   "browser": "router.js",
   "files": [

@@ -1,5 +1,5 @@
 import { guard } from './auth.js'
-import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.1/router.js'
+import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.2/router.js'
 import { render, updateAriaCurrentPage, view } from './utils.js'
 
 const nav = document.querySelector('header nav')
