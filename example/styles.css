@@ -1,5 +1,5 @@
 :root {
-    box-sizing: inherit;
+    box-sizing: border-box;
     font-family: monospace;
 }
 
@@ -19,7 +19,7 @@ main:empty {
 }
 
 main:empty::after {
-    content: 'Loading... please wait.'
+    content: 'Loading... please wait.';
 }
 
 a {

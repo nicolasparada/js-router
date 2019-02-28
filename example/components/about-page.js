@@ -5,6 +5,6 @@ page.innerHTML = `
     <p>Demo of <a href="https://github.com/nicolasparada/js-router" target="_blank" rel="noopener">@nicolasparada/router</a>.</p>
 `
 
-export default function aboutPage() {
+export default function renderAboutPage() {
     return page
 }

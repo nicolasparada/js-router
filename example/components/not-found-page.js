@@ -4,6 +4,6 @@ page.innerHTML = `
     <h1>404 Not Found</h1>
 `
 
-export default function notFoundPage() {
+export default function renderNotFoundPage() {
     return page
 }

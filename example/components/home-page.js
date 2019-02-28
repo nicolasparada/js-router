@@ -1,7 +1,7 @@
-import { getAuthUser } from '../auth.js';
-import { escapeHTML } from '../utils.js';
+import { getAuthUser } from '../auth.js'
+import { escapeHTML } from '../utils.js'
 
-export default function homePage() {
+export default function renderHomePage() {
     const authUser = getAuthUser()
     const page = document.createElement('div')
     page.className = 'container'

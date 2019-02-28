@@ -9,3 +9,9 @@ export function getAuthUser() {
         return null
     }
 }
+
+export function guard(fn1, fn2) {
+    return (...args) => getAuthUser() !== null
+        ? fn1(...args)
+        : fn2(...args)
+}

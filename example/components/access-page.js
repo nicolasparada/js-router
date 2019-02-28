@@ -15,7 +15,7 @@ template.innerHTML = `
         <p>Not a real login. Enter any name 🙂</p>
     </div>
 `
-export default function accessPage() {
+export default function renderAccessPage() {
     const page = /** @type {DocumentFragment} */ (template.content.cloneNode(true))
     page.querySelector('form').addEventListener('submit', login)
     setTimeout(input => {

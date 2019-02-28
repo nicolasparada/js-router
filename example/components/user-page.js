@@ -1,6 +1,6 @@
 import { escapeHTML } from '../utils.js';
 
-export default function userPage({ username }) {
+export default function renderUserPage({ username }) {
     const page = document.createElement('div')
     page.className = 'container'
     page.innerHTML = `
