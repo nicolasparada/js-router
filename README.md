@@ -10,7 +10,7 @@ Shipped like an ES module. Load it with `<script type=module>`.
 ## Example
 
 ```js
-import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.7.2/router.js'
+import { createRouter } from 'https://unpkg.com/@nicolasparada/router@0.8.0/router.js'
 
 const main = document.querySelector('main')
 const router = createRouter()
@@ -76,7 +76,7 @@ It makes the router start listening for navigation events (`popstate` and whatso
 ### Navigate
 
 ```js
-import { navigate } from 'https://unpkg.com/@nicolasparada/router@0.7.2/router.js'
+import { navigate } from 'https://unpkg.com/@nicolasparada/router@0.8.0/router.js'
 
 navigate('/')
 ```
